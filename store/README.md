@@ -22,7 +22,7 @@ Everything the listing needs is in this folder:
 
 1. Sign in at <https://addons.mozilla.org/developers/addon/submit/distribution>.
 2. Choose **On this site** (public listing).
-3. Upload the zip from `web-ext-artifacts/`. Compatibility: Firefox only (not Android).
+3. Upload `web-ext-artifacts/fine_volume_for_youtube_music-<version>.zip`, the file made by `npm run build`, about 15 KB with `manifest.json` at its root. **Don't zip the project folder yourself.** That brings in `node_modules/` and `.git/`, and AMO rejects it with "No manifest.json was found at the root of the extension" plus hundreds of warnings. Compatibility: Firefox only (not Android).
 4. Answer **No** to "Do you need to submit source code?". The code is neither minified nor bundled.
 5. Fill in the listing:
    - **Name:** taken from the manifest ("Fine Volume for YouTube Music").
