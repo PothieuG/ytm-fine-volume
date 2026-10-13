@@ -38,31 +38,40 @@ Les flèches sont ignorées quand le curseur est dans un champ de texte (la rech
 
 Il faut Firefox 140 ou plus récent.
 
-### Pour essayer (jusqu'au prochain redémarrage de Firefox)
+### Installation permanente
+
+Firefox (version normale) n'installe durablement que les extensions **signées par Mozilla**. La signature « non listée » est gratuite et automatique, et elle ne publie rien sur le catalogue.
+
+**Par le site** (sans ligne de commande) :
+
+1. Générer le zip avec `npm install` puis `npm run build`. Il arrive dans `web-ext-artifacts/ytm_fine_volume-<version>.zip`.
+2. Se connecter sur <https://addons.mozilla.org/developers/addon/submit/distribution> avec un compte Mozilla.
+3. Choisir **« On your own »** (distribution personnelle), puis envoyer le zip.
+4. Après la validation automatique (quelques minutes en général), télécharger le `.xpi` signé et le glisser sur une fenêtre Firefox.
+
+**En ligne de commande** : créer des clés d'API sur <https://addons.mozilla.org/developers/addon/api/key/>, puis :
+
+```bash
+npm run sign -- --api-key=<clé JWT issuer> --api-secret=<secret JWT>
+```
+
+Le `.xpi` signé arrive dans `web-ext-artifacts/`.
+
+Chaque nouvelle signature demande d'augmenter `version` dans `extension/manifest.json`.
+
+Autre solution : Firefox Developer Edition ou Nightly, avec `xpinstall.signatures.required` à `false` dans `about:config`, acceptent le zip non signé.
+
+### Pour essayer (jusqu'à la fermeture de Firefox)
 
 1. Ouvrir `about:debugging#/runtime/this-firefox`.
 2. Cliquer sur **Charger un module complémentaire temporaire…**.
 3. Choisir `extension/manifest.json`.
 
-### Installation permanente
-
-Firefox (version normale) n'installe que les extensions signées par Mozilla. La signature « non listée » est gratuite et automatique, et elle ne publie rien sur le catalogue :
-
-1. Créer des clés d'API sur <https://addons.mozilla.org/developers/addon/api/key/>.
-2. Lancer la signature :
-
-   ```bash
-   npm install
-   npm run sign -- --api-key=<clé JWT issuer> --api-secret=<secret JWT>
-   ```
-
-3. Glisser le `.xpi` obtenu (dans `web-ext-artifacts/`) sur une fenêtre Firefox.
-
-Autre solution : Firefox Developer Edition ou Nightly avec `xpinstall.signatures.required` à `false` dans `about:config`, puis `npm run build`.
+Firefox **retire ce module à la fermeture**. Il faut donc le recharger à chaque démarrage, ou passer par l'installation permanente.
 
 ## Réglages
 
-Dans `about:addons` → YTM Fine Volume → **Options** :
+L'icône de l'extension apparaît dans la barre d'outils, en haut à droite. Si elle est rangée dans le menu des extensions (la pièce de puzzle), clic droit dessus puis **Épingler à la barre d'outils**. Un clic sur l'icône ouvre les réglages, qui sont aussi accessibles dans `about:addons` → YTM Fine Volume → **Options** :
 
 - **Exposant** (de 1 à 3) : 1 rétablit la courbe d'origine. Un tableau montre l'effet en dB.
 - **Molette**, **flèches** et **affichage à l'écran** : chacun peut être activé ou désactivé.

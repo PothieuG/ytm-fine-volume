@@ -1,8 +1,19 @@
+/* Also used as the toolbar popup (see "action" in manifest.json). */
+:root {
+  color-scheme: light dark;
+}
+
 body {
   font: 14px/1.4 system-ui, sans-serif;
   margin: 0;
   padding: 8px 16px 16px;
+  min-width: 320px;
   max-width: 520px;
+}
+
+h1 {
+  font-size: 16px;
+  margin: 8px 0 0;
 }
 
 h2 {
