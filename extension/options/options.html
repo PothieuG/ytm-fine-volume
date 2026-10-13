@@ -1,8 +1,9 @@
 <!doctype html>
-<html lang="fr">
+<!-- Texts come from _locales (data-i18n*, applied by options.js); the English here is a fallback. -->
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>YTM Fine Volume</title>
+    <title>Fine Volume for YouTube Music</title>
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
@@ -14,51 +15,49 @@
 
     <section id="player" hidden>
       <div class="volume-row">
-        <button id="down" class="round" type="button" title="Baisser" aria-label="Baisser le volume">
+        <button id="down" class="round" type="button" data-i18n-label="volumeDown">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z" /></svg>
         </button>
         <label class="volume-value">
-          <input id="volume" type="number" min="0" max="100" step="1" aria-label="Volume du lecteur, en %" />
+          <input id="volume" type="number" min="0" max="100" step="1" data-i18n-label="volumeInputLabel" />
           <span>%</span>
         </label>
-        <button id="up" class="round" type="button" title="Monter" aria-label="Monter le volume">
+        <button id="up" class="round" type="button" data-i18n-label="volumeUp">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z" /></svg>
         </button>
       </div>
-      <input id="volume-range" type="range" min="0" max="100" step="1" aria-label="Volume du lecteur" />
+      <input id="volume-range" type="range" min="0" max="100" step="1" data-i18n-label="volumeRangeLabel" />
       <p id="output" class="sub"></p>
     </section>
 
     <section id="problem" hidden>
       <p id="problem-text"></p>
-      <p id="problem-hint" class="sub" hidden>
-        En navigation privée, l'extension doit d'abord y être autorisée dans about:addons.
-      </p>
+      <p id="problem-hint" class="sub" data-i18n="hintPrivate" hidden></p>
       <button id="problem-action" class="pill" type="button" hidden></button>
     </section>
 
     <details id="settings">
-      <summary>Réglages</summary>
+      <summary data-i18n="settings">Settings</summary>
       <div class="row">
-        <label for="exponent">Courbe</label>
+        <label for="exponent" data-i18n="curve">Curve</label>
         <input id="exponent" type="range" min="1" max="3" step="0.1" />
         <output id="exponent-value" for="exponent"></output>
       </div>
       <p id="preview" class="sub"></p>
       <div class="row">
-        <label for="step">Pas de la molette et des flèches</label>
+        <label for="step" data-i18n="step">Wheel and arrow keys step</label>
         <span class="unit"><input id="step" type="number" min="1" max="10" step="1" /> %</span>
       </div>
       <label class="row">
-        Molette sur la barre du lecteur
+        <span data-i18n="wheel">Mouse wheel over the player bar</span>
         <input id="wheel" type="checkbox" class="toggle" /><span class="switch" aria-hidden="true"></span>
       </label>
       <label class="row">
-        Flèches ↑ / ↓
+        <span data-i18n="arrows">Arrow keys ↑ / ↓</span>
         <input id="arrows" type="checkbox" class="toggle" /><span class="switch" aria-hidden="true"></span>
       </label>
       <label class="row">
-        Volume affiché sur la page
+        <span data-i18n="osd">Show the volume on the page</span>
         <input id="osd" type="checkbox" class="toggle" /><span class="switch" aria-hidden="true"></span>
       </label>
     </details>

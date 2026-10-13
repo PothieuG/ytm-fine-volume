@@ -1,0 +1,52 @@
+{
+  "messagesLanguage": { "message": "en", "description": "BCP 47 code of this translation, used as the page lang attribute." },
+  "extensionName": { "message": "Fine Volume for YouTube Music" },
+  "extensionDescription": {
+    "message": "Go below YouTube Music's minimum volume and set it to the exact percent with the mouse wheel, arrow keys or the toolbar popup."
+  },
+
+  "volumeDown": { "message": "Volume down" },
+  "volumeUp": { "message": "Volume up" },
+  "volumeInputLabel": { "message": "Player volume, in percent" },
+  "volumeRangeLabel": { "message": "Player volume" },
+  "badgeActive": { "message": "Active" },
+  "badgeInactive": { "message": "Inactive" },
+  "outputLevel": {
+    "message": "Actual output $LEVEL$",
+    "placeholders": { "level": { "content": "$1", "example": "−46 dB" } }
+  },
+  "outputMuted": { "message": "Muted" },
+  "outputOff": { "message": "Output off" },
+
+  "problemPermission": { "message": "The extension can't access music.youtube.com." },
+  "actionPermission": { "message": "Allow access" },
+  "problemNoTab": { "message": "No YouTube Music tab is open." },
+  "actionNoTab": { "message": "Open YouTube Music" },
+  "problemNotInjected": { "message": "The extension isn't active in the YouTube Music tab yet." },
+  "actionNotInjected": { "message": "Reload the tab" },
+  "problemNoPlayer": { "message": "Play a song to set the volume." },
+  "hintPrivate": { "message": "For private windows, first allow the extension in about:addons." },
+
+  "settings": { "message": "Settings" },
+  "curve": { "message": "Curve" },
+  "previewItem": {
+    "message": "$VOLUME$% → $GAIN$",
+    "placeholders": {
+      "volume": { "content": "$1", "example": "10" },
+      "gain": { "content": "$2", "example": "−40 dB" }
+    }
+  },
+  "step": { "message": "Wheel and arrow keys step" },
+  "wheel": { "message": "Mouse wheel over the player bar" },
+  "arrows": { "message": "Arrow keys ↑ / ↓" },
+  "osd": { "message": "Show the volume on the page" },
+
+  "osdVolume": {
+    "message": "Volume $VOLUME$% · $GAIN$ dB",
+    "placeholders": {
+      "volume": { "content": "$1", "example": "7" },
+      "gain": { "content": "$2", "example": "−46" }
+    }
+  },
+  "osdMuted": { "message": "Volume 0% (muted)" }
+}

@@ -1,0 +1,52 @@
+{
+  "messagesLanguage": { "message": "fr", "description": "BCP 47 code of this translation, used as the page lang attribute." },
+  "extensionName": { "message": "Fine Volume for YouTube Music" },
+  "extensionDescription": {
+    "message": "Descendez sous le volume minimum de YouTube Music et réglez-le au pour-cent près : molette, flèches ou popup de la barre d'outils."
+  },
+
+  "volumeDown": { "message": "Baisser le volume" },
+  "volumeUp": { "message": "Monter le volume" },
+  "volumeInputLabel": { "message": "Volume du lecteur, en pour-cent" },
+  "volumeRangeLabel": { "message": "Volume du lecteur" },
+  "badgeActive": { "message": "Actif" },
+  "badgeInactive": { "message": "Inactif" },
+  "outputLevel": {
+    "message": "Sortie réelle $LEVEL$",
+    "placeholders": { "level": { "content": "$1", "example": "−46 dB" } }
+  },
+  "outputMuted": { "message": "Son coupé" },
+  "outputOff": { "message": "Sortie coupée" },
+
+  "problemPermission": { "message": "L'extension n'a pas accès à music.youtube.com." },
+  "actionPermission": { "message": "Autoriser" },
+  "problemNoTab": { "message": "Aucun onglet YouTube Music ouvert." },
+  "actionNoTab": { "message": "Ouvrir YouTube Music" },
+  "problemNotInjected": { "message": "L'extension n'est pas encore active dans l'onglet YouTube Music." },
+  "actionNotInjected": { "message": "Recharger l'onglet" },
+  "problemNoPlayer": { "message": "Lancez un morceau pour régler le volume." },
+  "hintPrivate": { "message": "En navigation privée, autorisez d'abord l'extension dans about:addons." },
+
+  "settings": { "message": "Réglages" },
+  "curve": { "message": "Courbe" },
+  "previewItem": {
+    "message": "$VOLUME$ % → $GAIN$",
+    "placeholders": {
+      "volume": { "content": "$1", "example": "10" },
+      "gain": { "content": "$2", "example": "−40 dB" }
+    }
+  },
+  "step": { "message": "Pas molette et flèches" },
+  "wheel": { "message": "Molette sur la barre du lecteur" },
+  "arrows": { "message": "Flèches ↑ / ↓" },
+  "osd": { "message": "Volume affiché sur la page" },
+
+  "osdVolume": {
+    "message": "Volume $VOLUME$ % · $GAIN$ dB",
+    "placeholders": {
+      "volume": { "content": "$1", "example": "7" },
+      "gain": { "content": "$2", "example": "−46" }
+    }
+  },
+  "osdMuted": { "message": "Volume 0 % (muet)" }
+}

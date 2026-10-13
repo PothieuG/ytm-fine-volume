@@ -3,7 +3,18 @@ const YTM_PATTERN = 'https://music.youtube.com/*';
 const PREVIEW_LEVELS = [1, 10, 50];
 
 const $ = (id) => document.getElementById(id);
+const t = (key, ...substitutions) => browser.i18n.getMessage(key, substitutions);
 const formatDb = (gain) => `${Math.round(20 * Math.log10(gain))} dB`.replace('-', '−');
+
+function localize() {
+  document.documentElement.lang = t('messagesLanguage');
+  for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
+  for (const el of document.querySelectorAll('[data-i18n-label]')) {
+    const label = t(el.dataset.i18nLabel);
+    el.setAttribute('aria-label', label);
+    if (el.localName === 'button') el.title = label;
+  }
+}
 
 // ---- Live control of the YouTube Music tab ----------------------------------------------------
 
@@ -27,22 +38,22 @@ async function sendCommand(command) {
 
 const PROBLEMS = {
   permission: {
-    text: "L'extension n'a pas accès à music.youtube.com.",
-    action: 'Autoriser',
+    text: 'problemPermission',
+    action: 'actionPermission',
     run: () => browser.permissions.request({ origins: [YTM_PATTERN] }),
   },
   'no-tab': {
-    text: 'Aucun onglet YouTube Music ouvert.',
-    action: 'Ouvrir YouTube Music',
+    text: 'problemNoTab',
+    action: 'actionNoTab',
     run: () => browser.tabs.create({ url: YTM_URL }),
   },
   'not-injected': {
-    text: "L'extension n'est pas encore active dans l'onglet YouTube Music.",
-    action: "Recharger l'onglet",
+    text: 'problemNotInjected',
+    action: 'actionNotInjected',
     run: (status) => browser.tabs.reload(status.tabId),
   },
   'no-player': {
-    text: 'Lance un morceau pour régler le volume.',
+    text: 'problemNoPlayer',
   },
 };
 
@@ -56,26 +67,26 @@ async function render(status) {
   const problem = PROBLEMS[status.problem];
   const active = !problem || status.problem === 'no-player';
   $('badge').hidden = false;
-  $('badge').textContent = active ? 'Actif' : 'Inactif';
+  $('badge').textContent = t(active ? 'badgeActive' : 'badgeInactive');
   $('badge').classList.toggle('ok', active);
   $('player').hidden = Boolean(problem);
   $('problem').hidden = !problem;
   if (problem) {
-    $('problem-text').textContent = problem.text;
+    $('problem-text').textContent = t(problem.text);
     $('problem-hint').hidden =
       status.problem !== 'no-tab' || (await browser.extension.isAllowedIncognitoAccess());
     $('problem-action').hidden = !problem.action;
-    $('problem-action').textContent = problem.action ?? '';
+    $('problem-action').textContent = problem.action ? t(problem.action) : '';
     return;
   }
   // Don't fight the user while they type a value or drag the slider.
   if (document.activeElement !== volumeInput) volumeInput.value = status.volume;
   if (!draggingRange) volumeRange.value = status.volume;
   $('output').textContent = status.muted
-    ? 'Son coupé'
+    ? t('outputMuted')
     : status.output > 0
-      ? `Sortie réelle ${formatDb(status.output)}`
-      : 'Sortie coupée';
+      ? t('outputLevel', formatDb(status.output))
+      : t('outputOff');
 }
 
 const run = async (command = { type: 'status' }) => render(await sendCommand(command));
@@ -117,8 +128,8 @@ const fields = {
 
 function renderPreview(exponent) {
   $('exponent-value').textContent = exponent.toFixed(1);
-  $('preview').textContent = PREVIEW_LEVELS.map(
-    (level) => `${level} % → ${formatDb((level / 100) ** exponent)}`,
+  $('preview').textContent = PREVIEW_LEVELS.map((level) =>
+    t('previewItem', String(level), formatDb((level / 100) ** exponent)),
   ).join(' · ');
 }
 
@@ -139,6 +150,7 @@ function restoreSettingsPanel() {
 }
 
 async function init() {
+  localize();
   restoreSettingsPanel();
   const config = await browser.storage.local.get(YTM_FINE_VOLUME_DEFAULTS);
   for (const [name, input] of Object.entries(fields)) {

@@ -6,10 +6,18 @@ const EVENT_HELLO = 'ytm-fine-volume:hello';
 const EVENT_COMMAND = 'ytm-fine-volume:command';
 const EVENT_STATUS = 'ytm-fine-volume:status';
 
+// On-page display texts, localised here since page.js has no i18n API ({volume} / {gain} are
+// filled in by page.js).
+const OSD_STRINGS = {
+  volume: browser.i18n.getMessage('osdVolume', ['{volume}', '{gain}']),
+  muted: browser.i18n.getMessage('osdMuted'),
+};
+
 async function sendConfig() {
   const config = await browser.storage.local.get(YTM_FINE_VOLUME_DEFAULTS);
   // A string detail crosses the isolated/page boundary without Xray wrapping issues.
-  window.dispatchEvent(new CustomEvent(EVENT_CONFIG, { detail: JSON.stringify(config) }));
+  const detail = JSON.stringify({ ...config, strings: OSD_STRINGS });
+  window.dispatchEvent(new CustomEvent(EVENT_CONFIG, { detail }));
 }
 
 // page.js says hello when it starts, in case it runs after our first send.

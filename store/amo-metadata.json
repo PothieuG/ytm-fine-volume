@@ -1,0 +1,18 @@
+{
+  "categories": { "firefox": ["photos-music-videos"] },
+  "summary": {
+    "en-US": "Go below YouTube Music's minimum volume and set it to the exact percent: a smoother volume curve (down to −80 dB instead of −40 dB), 1% steps with the mouse wheel or arrow keys, and a popup to type the volume.",
+    "fr": "Descendez sous le volume minimum de YouTube Music et réglez-le au pour-cent près : courbe plus douce (jusqu'à −80 dB au lieu de −40 dB), pas de 1 % à la molette ou aux flèches, et un popup pour taper le volume."
+  },
+  "description": {
+    "en-US": "YouTube Music's volume slider can't go quieter than 1%, which is −40 dB, and everything below position 5 of the slider is silent. At night or with headphones, that is often still too loud, and the sound jumps in all at once.\n\nFine Volume for YouTube Music fixes this:\n\n• Smoother volume curve: the bottom of the slider now goes down to −80 dB, while 100% stays as loud as before. The curve is adjustable, and setting it to 1 restores the original behavior.\n• 1% steps: use the mouse wheel over the player bar or the ↑ / ↓ arrow keys. The volume shows briefly on the page.\n• Toolbar popup: type the exact volume, use − / + or the slider, and see the actual output level in dB. If the extension can't act (tab opened before it, missing access…), the popup says why and offers a one-click fix.\n• YouTube Music's loudness normalization keeps working.\n\nAvailable in English and French.\n\nPrivacy: the extension collects no data, makes no network requests and only runs on music.youtube.com.\n\nPermissions:\n• Access to music.youtube.com: to adjust the player's volume on that site.\n• Storage: to remember your settings.\n\nThis extension is not affiliated with, endorsed by or sponsored by Google or YouTube.",
+    "fr": "Le slider de volume de YouTube Music ne descend pas sous 1 %, soit −40 dB, et tout ce qui est sous la position 5 du slider est muet. La nuit ou au casque, c'est souvent encore trop fort, et le son arrive d'un coup.\n\nFine Volume for YouTube Music corrige ça :\n\n• Courbe de volume plus douce : le bas du slider descend maintenant jusqu'à −80 dB, et 100 % reste aussi fort qu'avant. La courbe est réglable, et la mettre à 1 rétablit le comportement d'origine.\n• Pas de 1 % : molette sur la barre du lecteur ou flèches ↑ / ↓. Le volume s'affiche brièvement sur la page.\n• Popup dans la barre d'outils : tapez le volume exact, utilisez − / + ou le slider, et voyez le niveau de sortie réel en dB. Si l'extension ne peut pas agir (onglet ouvert avant elle, accès manquant…), le popup explique pourquoi et propose la correction en un clic.\n• La normalisation du volume de YouTube Music continue de fonctionner.\n\nDisponible en anglais et en français.\n\nConfidentialité : l'extension ne collecte aucune donnée, ne fait aucune requête réseau et ne s'exécute que sur music.youtube.com.\n\nPermissions :\n• Accès à music.youtube.com : pour régler le volume du lecteur sur ce site.\n• Stockage : pour mémoriser vos réglages.\n\nCette extension n'est ni affiliée à Google ou YouTube, ni approuvée ou sponsorisée par eux."
+  },
+  "version": {
+    "license": "MIT",
+    "release_notes": {
+      "en-US": "First public release.",
+      "fr": "Première version publique."
+    }
+  }
+}

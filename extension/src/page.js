@@ -16,6 +16,8 @@
 
   // Fallback until bridge.js delivers the stored settings (keep in sync with src/defaults.js).
   let config = { exponent: 2, step: 1, wheel: true, arrows: true, osd: true };
+  // Localised by bridge.js (from _locales); English until it arrives.
+  let strings = { volume: 'Volume {volume}% · {gain} dB', muted: 'Volume 0% (muted)' };
 
   const getPlayer = () => document.getElementById('movie_player');
 
@@ -172,8 +174,9 @@
       });
       document.documentElement.append(osd);
     }
-    const gainDb = Math.round(20 * config.exponent * Math.log10(volume / 100));
-    osd.textContent = volume === 0 ? 'Volume 0 % (muet)' : `Volume ${volume} % · ${gainDb} dB`.replace('-', '−');
+    const gainDb = String(Math.round(20 * config.exponent * Math.log10(volume / 100))).replace('-', '−');
+    osd.textContent =
+      volume === 0 ? strings.muted : strings.volume.replace('{volume}', volume).replace('{gain}', gainDb);
     osd.style.opacity = '1';
     clearTimeout(osdTimer);
     osdTimer = setTimeout(() => (osd.style.opacity = '0'), 1200);
@@ -198,6 +201,9 @@
       arrows: stored.arrows !== false,
       osd: stored.osd !== false,
     };
+    if (typeof stored.strings?.volume === 'string' && typeof stored.strings?.muted === 'string') {
+      strings = { volume: stored.strings.volume, muted: stored.strings.muted };
+    }
     if (config.exponent !== previousExponent) reapplyCurve();
   });
 
