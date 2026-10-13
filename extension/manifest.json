@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "YTM Fine Volume",
+  "version": "1.0.0",
+  "description": "Volume fin pour YouTube Music : descend sous le minimum du slider et règle le volume au pour-cent près (molette / flèches).",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ytm-fine-volume@pothieug",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
+    }
+  },
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "permissions": ["storage"],
+  "host_permissions": ["https://music.youtube.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://music.youtube.com/*"],
+      "js": ["src/page.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://music.youtube.com/*"],
+      "js": ["src/defaults.js", "src/bridge.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "options_ui": {
+    "page": "options/options.html"
+  }
+}

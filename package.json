@@ -1,0 +1,15 @@
+{
+  "name": "ytm-fine-volume",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Extension Firefox : volume fin pour YouTube Music, sous le minimum du slider.",
+  "scripts": {
+    "start": "web-ext run --source-dir extension --start-url https://music.youtube.com",
+    "lint": "web-ext lint --source-dir extension",
+    "build": "web-ext build --source-dir extension --overwrite-dest",
+    "sign": "web-ext sign --source-dir extension --channel unlisted"
+  },
+  "devDependencies": {
+    "web-ext": "^10.7.0"
+  }
+}
