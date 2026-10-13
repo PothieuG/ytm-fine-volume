@@ -4,11 +4,21 @@
   "private": true,
   "description": "Firefox extension: go below YouTube Music's minimum volume and set it to the exact percent.",
   "license": "MIT",
+  "homepage": "https://addons.mozilla.org/firefox/addon/fine-volume-for-youtube-music/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PothieuG/ytm-fine-volume.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PothieuG/ytm-fine-volume/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "web-ext run --source-dir extension --start-url https://music.youtube.com",
     "lint": "web-ext lint --source-dir extension",
     "build": "web-ext build --source-dir extension --overwrite-dest",
-    "sign": "web-ext sign --source-dir extension --channel unlisted",
     "submit": "web-ext sign --source-dir extension --channel listed --amo-metadata store/amo-metadata.json"
   },
   "devDependencies": {

@@ -53,11 +53,11 @@ The extension collects no data and makes no network requests. It only runs on mu
 
 Requires Firefox 142 or later.
 
-### From addons.mozilla.org
+### From addons.mozilla.org (recommended)
 
-Once published, install it from its addons.mozilla.org page.
+Install it from **[addons.mozilla.org/firefox/addon/fine-volume-for-youtube-music](https://addons.mozilla.org/firefox/addon/fine-volume-for-youtube-music/)**. Firefox then keeps it up to date.
 
-### From this repository (until Firefox closes)
+### From this repository, for testing (until Firefox closes)
 
 1. Open `about:debugging#/runtime/this-firefox`.
 2. Click **Load Temporary Add-on…**.
@@ -65,14 +65,28 @@ Once published, install it from its addons.mozilla.org page.
 
 Firefox **removes temporary add-ons when it closes**.
 
+## Feedback and bugs
+
+Open an issue on [GitHub](https://github.com/PothieuG/ytm-fine-volume/issues). For a bug, please include:
+
+- your Firefox version;
+- what the popup says (the Active / Inactive badge and its message);
+- what you did and what you expected.
+
 ## Development
+
+Requires Node.js 20 or later.
 
 ```bash
 npm install
 npm start       # launches a test Firefox with the extension on music.youtube.com
-npm run lint
+npm run lint    # addons-linter, the same checks addons.mozilla.org runs
 npm run build   # zip in web-ext-artifacts/
 ```
+
+There is no build step: the files in `extension/` are what ships.
+
+Pull requests are welcome. Please keep `npm run lint` at 0 errors and 0 warnings, and add any new text to both `extension/_locales/en` and `extension/_locales/fr`.
 
 Layout:
 
@@ -80,7 +94,9 @@ Layout:
 - `extension/src/bridge.js` reads the settings from `browser.storage` and passes them, along with the localized on-page texts, to `page.js` through DOM events, since the page context has no access to extension APIs. It also relays the popup's commands.
 - `extension/options/` is the popup, also used as the options page.
 - `extension/_locales/` holds the English (default) and French texts.
-- `store/` holds the addons.mozilla.org listing texts, screenshots and the publishing checklist.
+- `store/` holds the addons.mozilla.org listing texts, screenshots and the [release checklist](store/README.md).
+
+See [CHANGELOG.md](CHANGELOG.md) for the version history.
 
 ## Limitations
 
