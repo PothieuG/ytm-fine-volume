@@ -11,6 +11,8 @@
 
   const EVENT_CONFIG = 'ytm-fine-volume:config';
   const EVENT_HELLO = 'ytm-fine-volume:hello';
+  const EVENT_COMMAND = 'ytm-fine-volume:command';
+  const EVENT_STATUS = 'ytm-fine-volume:status';
 
   // Fallback until bridge.js delivers the stored settings (keep in sync with src/defaults.js).
   let config = { exponent: 2, step: 1, wheel: true, arrows: true, osd: true };
@@ -191,6 +193,32 @@
       osd: stored.osd !== false,
     };
     if (config.exponent !== previousExponent) reapplyCurve();
+  });
+
+  // ---- Toolbar popup (via bridge.js) ---------------------------------------------------------
+
+  function status() {
+    const player = getPlayer();
+    const volume = player?.getVolume?.();
+    const media = document.querySelector('video');
+    return {
+      player: Number.isFinite(volume),
+      volume: Number.isFinite(volume) ? volume : null,
+      muted: Boolean(player?.isMuted?.()),
+      // What actually reaches the audio output, curve and normalisation included.
+      output: media && !media.muted ? nativeVolume.get.call(media) : 0,
+    };
+  }
+
+  window.addEventListener(EVENT_COMMAND, (event) => {
+    let command;
+    try {
+      command = JSON.parse(event.detail);
+    } catch {
+      return;
+    }
+    if (command.type === 'step') stepVolume(command.direction === 1 ? 1 : -1);
+    window.dispatchEvent(new CustomEvent(EVENT_STATUS, { detail: JSON.stringify(status()) }));
   });
 
   window.dispatchEvent(new CustomEvent(EVENT_HELLO));

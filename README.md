@@ -71,7 +71,16 @@ Firefox **retire ce module à la fermeture**. Il faut donc le recharger à chaqu
 
 ## Réglages
 
-L'icône de l'extension apparaît dans la barre d'outils, en haut à droite. Si elle est rangée dans le menu des extensions (la pièce de puzzle), clic droit dessus puis **Épingler à la barre d'outils**. Un clic sur l'icône ouvre les réglages, qui sont aussi accessibles dans `about:addons` → YTM Fine Volume → **Options** :
+L'icône de l'extension apparaît dans la barre d'outils, en haut à droite. Si elle est rangée dans le menu des extensions (la pièce de puzzle), clic droit dessus puis **Épingler à la barre d'outils**.
+
+Un clic sur l'icône ouvre un popup qui montre d'abord l'**état de l'extension** :
+
+- « Active sur YouTube Music. » : le volume du lecteur s'affiche, avec la sortie réelle en dB et des boutons − / +.
+- « … recharge-le (F5) » : l'onglet YouTube Music a été ouvert avant l'extension, ou le script n'a pas pu s'y exécuter.
+- « … pas l'autorisation … » : un bouton permet d'accorder l'accès à music.youtube.com.
+- « Aucun onglet YouTube Music ouvert. » : en navigation privée, l'extension doit être autorisée dans `about:addons`.
+
+En dessous, les réglages, aussi accessibles dans `about:addons` → YTM Fine Volume → **Options** :
 
 - **Exposant** (de 1 à 3) : 1 rétablit la courbe d'origine. Un tableau montre l'effet en dB.
 - **Molette**, **flèches** et **affichage à l'écran** : chacun peut être activé ou désactivé.

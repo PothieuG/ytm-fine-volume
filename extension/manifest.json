@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YTM Fine Volume",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Volume fin pour YouTube Music : descend sous le minimum du slider et règle le volume au pour-cent près (molette / flèches).",
   "browser_specific_settings": {
     "gecko": {

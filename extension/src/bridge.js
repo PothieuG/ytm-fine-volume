@@ -1,7 +1,10 @@
 // Isolated-world half of the extension: page.js cannot use WebExtension APIs, so this script
-// reads the settings from extension storage and hands them over through DOM events.
+// reads the settings from extension storage and hands them over through DOM events, and relays
+// the toolbar popup's commands.
 const EVENT_CONFIG = 'ytm-fine-volume:config';
 const EVENT_HELLO = 'ytm-fine-volume:hello';
+const EVENT_COMMAND = 'ytm-fine-volume:command';
+const EVENT_STATUS = 'ytm-fine-volume:status';
 
 async function sendConfig() {
   const config = await browser.storage.local.get(YTM_FINE_VOLUME_DEFAULTS);
@@ -15,3 +18,20 @@ browser.storage.onChanged.addListener((_changes, area) => {
   if (area === 'local') sendConfig();
 });
 sendConfig();
+
+// Popup → page.js. page.js answers synchronously; the timeout covers it not running at all.
+browser.runtime.onMessage.addListener((message) => {
+  if (message?.type !== 'command') return undefined;
+  return new Promise((resolve) => {
+    const onStatus = (event) => {
+      clearTimeout(timer);
+      resolve({ pageScript: true, ...JSON.parse(event.detail) });
+    };
+    const timer = setTimeout(() => {
+      window.removeEventListener(EVENT_STATUS, onStatus);
+      resolve({ pageScript: false });
+    }, 500);
+    window.addEventListener(EVENT_STATUS, onStatus, { once: true });
+    window.dispatchEvent(new CustomEvent(EVENT_COMMAND, { detail: JSON.stringify(message.command) }));
+  });
+});

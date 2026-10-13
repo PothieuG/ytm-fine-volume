@@ -8,6 +8,19 @@
   <body>
     <h1>YTM Fine Volume</h1>
     <section>
+      <p id="status" class="status"></p>
+      <button id="grant" type="button" hidden>Autoriser l'accès à music.youtube.com</button>
+      <div id="controls" class="controls" hidden>
+        <button id="down" type="button" aria-label="Baisser le volume">−</button>
+        <div class="readout">
+          <span id="volume"></span>
+          <span id="output" class="hint"></span>
+        </div>
+        <button id="up" type="button" aria-label="Monter le volume">+</button>
+      </div>
+    </section>
+
+    <section>
       <h2>Courbe de volume</h2>
       <label for="exponent">
         Exposant <output id="exponent-value"></output>
