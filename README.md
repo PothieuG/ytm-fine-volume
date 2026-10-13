@@ -69,22 +69,18 @@ Autre solution : Firefox Developer Edition ou Nightly, avec `xpinstall.signature
 
 Firefox **retire ce module à la fermeture**. Il faut donc le recharger à chaque démarrage, ou passer par l'installation permanente.
 
-## Réglages
+## Le popup
 
 L'icône de l'extension apparaît dans la barre d'outils, en haut à droite. Si elle est rangée dans le menu des extensions (la pièce de puzzle), clic droit dessus puis **Épingler à la barre d'outils**.
 
-Un clic sur l'icône ouvre un popup qui montre d'abord l'**état de l'extension** :
+Le popup reprend le style de YouTube Music : thème sombre et accents rouges.
 
-- « Active sur YouTube Music. » : le volume du lecteur s'affiche, avec la sortie réelle en dB et des boutons − / +.
-- « … recharge-le (F5) » : l'onglet YouTube Music a été ouvert avant l'extension, ou le script n'a pas pu s'y exécuter.
-- « … pas l'autorisation … » : un bouton permet d'accorder l'accès à music.youtube.com.
-- « Aucun onglet YouTube Music ouvert. » : en navigation privée, l'extension doit être autorisée dans `about:addons`.
-
-En dessous, les réglages, aussi accessibles dans `about:addons` → YTM Fine Volume → **Options** :
-
-- **Exposant** (de 1 à 3) : 1 rétablit la courbe d'origine. Un tableau montre l'effet en dB.
-- **Molette**, **flèches** et **affichage à l'écran** : chacun peut être activé ou désactivé.
-- **Pas** : nombre de pour-cent par cran (1 par défaut).
+- **Volume** : le pourcentage du lecteur se règle de trois façons. On peut cliquer sur le nombre et taper une valeur (Entrée pour valider), utiliser les boutons − / +, ou déplacer le slider. Juste en dessous s'affiche la sortie réelle en dB, courbe et normalisation comprises.
+- **Badge « Actif » / « Inactif »** : quand l'extension ne peut pas agir, le popup en donne la raison et propose une action : **Recharger l'onglet**, **Autoriser** l'accès à music.youtube.com, ou **Ouvrir YouTube Music**. En navigation privée, l'extension doit d'abord être autorisée dans `about:addons`.
+- **Réglages** (section repliable, ouverte d'office dans `about:addons` → YTM Fine Volume → Options) :
+  - **Courbe** (de 1 à 3) : 1 rétablit le comportement d'origine. L'effet est indiqué juste en dessous, par exemple « 1 % → −80 dB ».
+  - **Pas** de la molette et des flèches (1 % par défaut).
+  - Interrupteurs pour la **molette**, les **flèches** et le **volume affiché sur la page**.
 
 ## Développement
 

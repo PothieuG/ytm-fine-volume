@@ -90,13 +90,19 @@
     if (player.getVolume() !== target) player.setVolume(target);
   }
 
+  function setVolume(target) {
+    const player = getPlayer();
+    if (!player?.getVolume || !player.setVolume || !Number.isFinite(target)) return;
+    const volume = Math.round(Math.min(100, Math.max(0, target))); // the player only takes integers
+    setPlayerVolume(player, volume);
+    showOsd(volume);
+  }
+
   function stepVolume(direction) {
     const player = getPlayer();
-    if (!player?.getVolume || !player.setVolume) return;
+    if (!player?.getVolume) return;
     const current = player.isMuted?.() ? 0 : player.getVolume();
-    const target = Math.min(100, Math.max(0, current + direction * config.step));
-    setPlayerVolume(player, target);
-    showOsd(target);
+    setVolume(current + direction * config.step);
   }
 
   const isPlayerBar = (event) => event.composedPath().some((el) => el.localName === 'ytmusic-player-bar');
@@ -167,7 +173,7 @@
       document.documentElement.append(osd);
     }
     const gainDb = Math.round(20 * config.exponent * Math.log10(volume / 100));
-    osd.textContent = volume === 0 ? 'Volume 0 % (muet)' : `Volume ${volume} % · ${gainDb} dB`;
+    osd.textContent = volume === 0 ? 'Volume 0 % (muet)' : `Volume ${volume} % · ${gainDb} dB`.replace('-', '−');
     osd.style.opacity = '1';
     clearTimeout(osdTimer);
     osdTimer = setTimeout(() => (osd.style.opacity = '0'), 1200);
@@ -218,6 +224,7 @@
       return;
     }
     if (command.type === 'step') stepVolume(command.direction === 1 ? 1 : -1);
+    if (command.type === 'set') setVolume(Number(command.volume));
     window.dispatchEvent(new CustomEvent(EVENT_STATUS, { detail: JSON.stringify(status()) }));
   });
 

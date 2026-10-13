@@ -6,50 +6,62 @@
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
-    <h1>YTM Fine Volume</h1>
-    <section>
-      <p id="status" class="status"></p>
-      <button id="grant" type="button" hidden>Autoriser l'accès à music.youtube.com</button>
-      <div id="controls" class="controls" hidden>
-        <button id="down" type="button" aria-label="Baisser le volume">−</button>
-        <div class="readout">
-          <span id="volume"></span>
-          <span id="output" class="hint"></span>
-        </div>
-        <button id="up" type="button" aria-label="Monter le volume">+</button>
+    <header>
+      <img src="../icons/icon.svg" alt="" width="22" height="22" />
+      <h1>Fine Volume</h1>
+      <span id="badge" class="badge" hidden></span>
+    </header>
+
+    <section id="player" hidden>
+      <div class="volume-row">
+        <button id="down" class="round" type="button" title="Baisser" aria-label="Baisser le volume">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h14v2H5z" /></svg>
+        </button>
+        <label class="volume-value">
+          <input id="volume" type="number" min="0" max="100" step="1" aria-label="Volume du lecteur, en %" />
+          <span>%</span>
+        </label>
+        <button id="up" class="round" type="button" title="Monter" aria-label="Monter le volume">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z" /></svg>
+        </button>
       </div>
+      <input id="volume-range" type="range" min="0" max="100" step="1" aria-label="Volume du lecteur" />
+      <p id="output" class="sub"></p>
     </section>
 
-    <section>
-      <h2>Courbe de volume</h2>
-      <label for="exponent">
-        Exposant <output id="exponent-value"></output>
-      </label>
-      <input id="exponent" type="range" min="1" max="3" step="0.1" />
-      <p class="hint">
-        1 = comportement d'origine de YouTube Music. Plus l'exposant est grand, plus le bas du slider
-        descend loin sous le minimum d'origine (1 % = −40 dB). Le maximum ne change pas.
+    <section id="problem" hidden>
+      <p id="problem-text"></p>
+      <p id="problem-hint" class="sub" hidden>
+        En navigation privée, l'extension doit d'abord y être autorisée dans about:addons.
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th>Volume YTM</th>
-            <th>Sans l'extension</th>
-            <th>Avec</th>
-          </tr>
-        </thead>
-        <tbody id="preview"></tbody>
-      </table>
+      <button id="problem-action" class="pill" type="button" hidden></button>
     </section>
 
-    <section>
-      <h2>Réglage fin</h2>
-      <label class="check"><input id="wheel" type="checkbox" /> Molette sur la barre du lecteur</label>
-      <label class="check"><input id="arrows" type="checkbox" /> Flèches ↑ / ↓</label>
-      <label class="check"><input id="osd" type="checkbox" /> Afficher le volume à l'écran</label>
-      <label for="step">Pas (en %)</label>
-      <input id="step" type="number" min="1" max="10" step="1" />
-    </section>
+    <details id="settings">
+      <summary>Réglages</summary>
+      <div class="row">
+        <label for="exponent">Courbe</label>
+        <input id="exponent" type="range" min="1" max="3" step="0.1" />
+        <output id="exponent-value" for="exponent"></output>
+      </div>
+      <p id="preview" class="sub"></p>
+      <div class="row">
+        <label for="step">Pas de la molette et des flèches</label>
+        <span class="unit"><input id="step" type="number" min="1" max="10" step="1" /> %</span>
+      </div>
+      <label class="row">
+        Molette sur la barre du lecteur
+        <input id="wheel" type="checkbox" class="toggle" /><span class="switch" aria-hidden="true"></span>
+      </label>
+      <label class="row">
+        Flèches ↑ / ↓
+        <input id="arrows" type="checkbox" class="toggle" /><span class="switch" aria-hidden="true"></span>
+      </label>
+      <label class="row">
+        Volume affiché sur la page
+        <input id="osd" type="checkbox" class="toggle" /><span class="switch" aria-hidden="true"></span>
+      </label>
+    </details>
 
     <script src="../src/defaults.js"></script>
     <script src="options.js"></script>

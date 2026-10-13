@@ -1,110 +1,159 @@
-const PREVIEW_LEVELS = [1, 2, 3, 5, 10, 20, 50, 100];
+const YTM_URL = 'https://music.youtube.com/';
+const YTM_PATTERN = 'https://music.youtube.com/*';
+const PREVIEW_LEVELS = [1, 10, 50];
 
-const fields = {
-  exponent: document.getElementById('exponent'),
-  step: document.getElementById('step'),
-  wheel: document.getElementById('wheel'),
-  arrows: document.getElementById('arrows'),
-  osd: document.getElementById('osd'),
-};
+const $ = (id) => document.getElementById(id);
+const formatDb = (gain) => `${Math.round(20 * Math.log10(gain))} dB`.replace('-', '−');
 
-const formatDb = (gain) => `${Math.round(20 * Math.log10(gain))} dB`;
-
-function renderPreview(exponent) {
-  document.getElementById('exponent-value').textContent = exponent.toFixed(1);
-  const rows = PREVIEW_LEVELS.map((level) => {
-    const row = document.createElement('tr');
-    for (const text of [`${level} %`, formatDb(level / 100), formatDb((level / 100) ** exponent)]) {
-      const cell = document.createElement('td');
-      cell.textContent = text;
-      row.append(cell);
-    }
-    return row;
-  });
-  document.getElementById('preview').replaceChildren(...rows);
-}
-
-function readField(name) {
-  const input = fields[name];
-  return input.type === 'checkbox' ? input.checked : Number(input.value);
-}
-
-// ---- Live status of the YouTube Music tab -----------------------------------------------------
-
-const YTM_ORIGIN = 'https://music.youtube.com/*';
-const statusLine = document.getElementById('status');
-const controls = document.getElementById('controls');
-const grantButton = document.getElementById('grant');
-
-function showStatus(text, kind) {
-  statusLine.textContent = text;
-  statusLine.className = `status ${kind}`;
-}
+// ---- Live control of the YouTube Music tab ----------------------------------------------------
 
 async function findYtmTab() {
-  const tabs = await browser.tabs.query({ url: YTM_ORIGIN });
+  const tabs = await browser.tabs.query({ url: YTM_PATTERN });
   return tabs.find((tab) => tab.active) ?? tabs.find((tab) => tab.audible) ?? tabs[0];
 }
 
 async function sendCommand(command) {
-  if (!(await browser.permissions.contains({ origins: [YTM_ORIGIN] }))) return { problem: 'permission' };
+  if (!(await browser.permissions.contains({ origins: [YTM_PATTERN] }))) return { problem: 'permission' };
   const tab = await findYtmTab();
   if (!tab) return { problem: 'no-tab' };
   try {
     const status = await browser.tabs.sendMessage(tab.id, { type: 'command', command });
-    return status?.pageScript ? status : { problem: 'not-injected' };
+    if (!status?.pageScript) return { problem: 'not-injected', tabId: tab.id };
+    return status.player ? status : { problem: 'no-player' };
   } catch {
-    return { problem: 'not-injected' }; // no content script in that tab
+    return { problem: 'not-injected', tabId: tab.id }; // no content script in that tab
   }
 }
 
-async function refresh(command = { type: 'status' }) {
-  const status = await sendCommand(command);
-  grantButton.hidden = status.problem !== 'permission';
-  controls.hidden = !status.player;
-  if (status.problem === 'permission') {
-    showStatus("L'extension n'a pas l'autorisation d'accéder à music.youtube.com.", 'problem');
-  } else if (status.problem === 'no-tab') {
-    const privateHint = (await browser.extension.isAllowedIncognitoAccess())
-      ? ''
-      : " (En navigation privée, l'extension doit être autorisée dans about:addons.)";
-    showStatus(`Aucun onglet YouTube Music ouvert.${privateHint}`, 'problem');
-  } else if (status.problem === 'not-injected') {
-    showStatus("L'extension n'est pas active dans l'onglet YouTube Music : recharge-le (F5).", 'problem');
-  } else if (!status.player) {
-    showStatus('Active. Lance un morceau pour régler le volume.', 'ok');
-  } else {
-    showStatus('Active sur YouTube Music.', 'ok');
-    document.getElementById('volume').textContent = status.muted ? 'Muet' : `${status.volume} %`;
-    document.getElementById('output').textContent =
-      status.output > 0 ? `sortie ${formatDb(status.output)}` : 'sortie coupée';
+const PROBLEMS = {
+  permission: {
+    text: "L'extension n'a pas accès à music.youtube.com.",
+    action: 'Autoriser',
+    run: () => browser.permissions.request({ origins: [YTM_PATTERN] }),
+  },
+  'no-tab': {
+    text: 'Aucun onglet YouTube Music ouvert.',
+    action: 'Ouvrir YouTube Music',
+    run: () => browser.tabs.create({ url: YTM_URL }),
+  },
+  'not-injected': {
+    text: "L'extension n'est pas encore active dans l'onglet YouTube Music.",
+    action: "Recharger l'onglet",
+    run: (status) => browser.tabs.reload(status.tabId),
+  },
+  'no-player': {
+    text: 'Lance un morceau pour régler le volume.',
+  },
+};
+
+const volumeInput = $('volume');
+const volumeRange = $('volume-range');
+let draggingRange = false;
+let lastStatus = {};
+
+async function render(status) {
+  lastStatus = status;
+  const problem = PROBLEMS[status.problem];
+  const active = !problem || status.problem === 'no-player';
+  $('badge').hidden = false;
+  $('badge').textContent = active ? 'Actif' : 'Inactif';
+  $('badge').classList.toggle('ok', active);
+  $('player').hidden = Boolean(problem);
+  $('problem').hidden = !problem;
+  if (problem) {
+    $('problem-text').textContent = problem.text;
+    $('problem-hint').hidden =
+      status.problem !== 'no-tab' || (await browser.extension.isAllowedIncognitoAccess());
+    $('problem-action').hidden = !problem.action;
+    $('problem-action').textContent = problem.action ?? '';
+    return;
   }
+  // Don't fight the user while they type a value or drag the slider.
+  if (document.activeElement !== volumeInput) volumeInput.value = status.volume;
+  if (!draggingRange) volumeRange.value = status.volume;
+  $('output').textContent = status.muted
+    ? 'Son coupé'
+    : status.output > 0
+      ? `Sortie réelle ${formatDb(status.output)}`
+      : 'Sortie coupée';
 }
 
-grantButton.addEventListener('click', async () => {
-  await browser.permissions.request({ origins: [YTM_ORIGIN] });
-  refresh();
+const run = async (command = { type: 'status' }) => render(await sendCommand(command));
+const setVolume = (value) => run({ type: 'set', volume: Math.round(Math.min(100, Math.max(0, value))) });
+
+$('down').addEventListener('click', () => run({ type: 'step', direction: -1 }));
+$('up').addEventListener('click', () => run({ type: 'step', direction: 1 }));
+
+volumeInput.addEventListener('focus', () => volumeInput.select());
+volumeInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') volumeInput.blur();
 });
-document.getElementById('down').addEventListener('click', () => refresh({ type: 'step', direction: -1 }));
-document.getElementById('up').addEventListener('click', () => refresh({ type: 'step', direction: 1 }));
+volumeInput.addEventListener('change', () => {
+  if (volumeInput.value !== '' && Number.isFinite(Number(volumeInput.value))) setVolume(Number(volumeInput.value));
+});
+
+volumeRange.addEventListener('pointerdown', () => (draggingRange = true));
+volumeRange.addEventListener('pointerup', () => (draggingRange = false));
+volumeRange.addEventListener('input', () => {
+  volumeInput.value = volumeRange.value;
+  setVolume(Number(volumeRange.value));
+});
+
+// Called synchronously from the click so permissions.request keeps its user gesture.
+$('problem-action').addEventListener('click', () => {
+  PROBLEMS[lastStatus.problem]?.run?.(lastStatus);
+  setTimeout(run, 1000);
+});
 
 // ---- Settings ---------------------------------------------------------------------------------
 
+const fields = {
+  exponent: $('exponent'),
+  step: $('step'),
+  wheel: $('wheel'),
+  arrows: $('arrows'),
+  osd: $('osd'),
+};
+
+function renderPreview(exponent) {
+  $('exponent-value').textContent = exponent.toFixed(1);
+  $('preview').textContent = PREVIEW_LEVELS.map(
+    (level) => `${level} % → ${formatDb((level / 100) ** exponent)}`,
+  ).join(' · ');
+}
+
+function readField(input) {
+  return input.type === 'checkbox' ? input.checked : Number(input.value);
+}
+
+function restoreSettingsPanel() {
+  const settings = $('settings');
+  // Always open in about:addons (where the page is framed), remembered in the toolbar popup.
+  const inAddonsManager = window.self !== window.top;
+  try {
+    settings.open = inAddonsManager || localStorage.getItem('settingsOpen') === '1';
+    settings.addEventListener('toggle', () => localStorage.setItem('settingsOpen', settings.open ? '1' : '0'));
+  } catch {
+    settings.open = inAddonsManager;
+  }
+}
+
 async function init() {
+  restoreSettingsPanel();
   const config = await browser.storage.local.get(YTM_FINE_VOLUME_DEFAULTS);
   for (const [name, input] of Object.entries(fields)) {
     if (input.type === 'checkbox') input.checked = config[name];
     else input.value = config[name];
     input.addEventListener('input', () => {
-      const value = readField(name);
+      const value = readField(input);
       if (input.type === 'number' && !(value >= Number(input.min) && value <= Number(input.max))) return;
       if (name === 'exponent') renderPreview(value);
       browser.storage.local.set({ [name]: value });
     });
   }
   renderPreview(config.exponent);
-  refresh();
-  setInterval(refresh, 1000); // follows changes made from YouTube Music itself
+  run();
+  setInterval(run, 1000); // follows changes made from YouTube Music itself
 }
 
 init();
